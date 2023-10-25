@@ -25,6 +25,7 @@ import io.opentelemetry.javaagent.bootstrap.internal.ExperimentalConfig;
 import io.opentelemetry.javaagent.bootstrap.internal.InstrumentationConfig;
 import io.opentelemetry.javaagent.instrumentation.pulsar.v2_8.VirtualFieldStore;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
@@ -157,6 +158,10 @@ public final class PulsarSingletons {
         throwable,
         timer.startTime(),
         timer.now());
+  }
+
+  public static Context extractContextFromProperties(Map<String, String> properties) {
+    return PROPAGATOR.extract(Context.current(), properties, PropertiesTextMapGetter.INSTANCE);
   }
 
   private static Context startAndEndConsumerReceive(
